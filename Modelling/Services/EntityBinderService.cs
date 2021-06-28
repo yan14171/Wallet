@@ -1,6 +1,7 @@
 ﻿using Projects.Modelling.DTOs;
 using Projects.Modelling.Entities;
 using Projects.Modelling.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,6 +9,11 @@ namespace Projects.Modelling.Services
 {
     public class EntityBinderService : IEntityBinderService
     {
+        public EntityBinderService()
+        {
+
+        }
+
 #region public
         public IEnumerable<UserEntity> BindUserEntities(IEnumerable<User> userModels)
         {
@@ -49,9 +55,62 @@ namespace Projects.Modelling.Services
 
             return projectEntities;
         }
-#endregion
+        
+        public Project BindProject(ProjectEntity entity)
+        {
+            return new Project()
+            {
+                Id = entity.Id,
+                AuthorId = entity.Author.Id,
+                TeamId = entity.Team.Id,
+                Name = entity.Name,
+                Description = entity.Description,
+                CreatedAt = entity.CreatedAt,
+                Deadline = entity.Deadline,
+            };
+        }
 
-#region private
+        public Task BindTask(TaskEntity task)
+        {
+            return new Task()
+            {
+                Id = task.Id,
+                ProjectId = task.ProjectId,
+                PerformerId = task.Performer.Id,
+                Name = task.Name,
+                Description = task.Description,
+                CreatedAt = task.CreatedAt,
+                FinishedAt = task.FinishedAt,
+                State = task.State,
+            };
+        }
+
+        public Team BindTeam(TeamEntity team)
+        {
+            return new Team()
+            {
+                CreatedAt = team.CreatedAt,
+                Id = team.Id,
+                Name = team.Name
+            };
+        }
+
+        public User BindUser(UserEntity user)
+        {
+            return new User()
+            {
+                Id = user.Id,
+                BirthDay = user.BirthDay,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                RegisteredAt = user.RegisteredAt,
+                TeamId = user.TeamId
+            };
+        }
+        #endregion
+
+        #region private
         private IEnumerable<ProjectEntity> CastToProjectEntities(
             IEnumerable<Project> projectModels,
             IEnumerable<UserEntity> userEntities,
@@ -92,18 +151,6 @@ namespace Projects.Modelling.Services
                         new ProjectEntity(project.projModel, project.Author, team, project.Tasks));
         }
 
-        private IEnumerable<TeamEntity> CastToTeamEntities(
-            IEnumerable<Team> teamModels,
-            IEnumerable<UserEntity> userEntities)
-        {
-            return teamModels.GroupJoin(
-                userEntities,
-                team => team.Id,
-                user => user.TeamId,
-                (team, user) =>
-                new TeamEntity(team, user));
-        }
-
         private IEnumerable<TaskEntity> CastToTaskEntities(
             IEnumerable<DTOs.Task> taskModels,
             IEnumerable<UserEntity> performerEntities)
@@ -122,6 +169,20 @@ namespace Projects.Modelling.Services
             return userModels.Select(
                 n => new UserEntity(n));
         }
-#endregion
+
+
+        private IEnumerable<TeamEntity> CastToTeamEntities(
+            IEnumerable<Team> teamModels,
+            IEnumerable<UserEntity> userEntities)
+        {
+            return teamModels.GroupJoin(
+                userEntities,
+                team => team.Id,
+                user => user.TeamId,
+                (team, user) =>
+                new TeamEntity(team, user));
+        }
+
+        #endregion
     }
 }

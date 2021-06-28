@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Projects</RootNamespace>
+    <UserSecretsId>7fcd5aa6-6cf6-4bb4-979f-2758ecb8df58</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

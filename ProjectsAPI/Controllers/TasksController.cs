@@ -1,46 +1,95 @@
-﻿/*using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using ProjectsAccess.Entities;
-using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Projects.API.Interfaces;
+using Projects.API.Services;
+using Projects.Modelling.Entities;
 
-namespace Projects.API.Controllers
+namespace Tasks.API.Controllers
 {
     [ApiController]
     [Route("api/tasks")]
     public class TasksController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult Get()
+        private readonly IEntityHandlerService entityHandler;
+        private readonly IQueryProcessingService queryProcessor;
+
+        public TasksController(IEntityHandlerService entityHandler, IQueryProcessingService queryProcessor)
         {
-            return Ok();
+            this.entityHandler = entityHandler;
+            this.queryProcessor = queryProcessor;
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TaskEntity>))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> Get()
+        {
+            var Tasks = await entityHandler.GetAllTaskEntitiesAsync();
+
+            if (Tasks.Count() < 1)
+                return NoContent();
+
+            return Ok(Tasks);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetByID([FromQuery] int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskEntity))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> GetByID(int id)
         {
-            return Ok(id);
+            var Task = await entityHandler.GetTaskEntitybyIdAsync(id);
+
+            if (Task == null)
+                return NoContent();
+
+            return Ok(Task);
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TaskEntity))]
         public IActionResult Post([FromBody] TaskEntity Task)
         {
-            return Created("", Task);
+            if (entityHandler.AddTask(Task))
+                return Created("", Task);
+
+            else return BadRequest();
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put([FromQuery]int id, [FromBody] TaskEntity Task)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> Put([FromQuery] int id, [FromBody] TaskEntity Task)
         {
-            return Ok(Task);
+            if (id < 0)
+                return BadRequest();
+
+            if (Task.Id != id)
+                Task.Id = id;
+
+            entityHandler
+                .DeleteTaskById(id);
+
+            entityHandler
+                .AddTask(Task);
+
+            return Ok();
         }
 
-        [HttpPatch("{id}")]
-        public IActionResult Patch([FromQuery]int id, [FromBody] TaskEntity Task)
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult Delete([FromQuery] int id)
         {
-            return Ok(Task);
+            if (id < 0)
+                return BadRequest();
+
+            entityHandler
+                .DeleteTaskById(id);
+
+            return NoContent();
         }
     }
 }
-*/

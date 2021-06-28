@@ -7,6 +7,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using Projects.Modelling.Services;
 
 namespace Projects.API.Services
 {
@@ -40,7 +41,7 @@ namespace Projects.API.Services
                 teamModels: teamsModelsTask.Result);
         }
 
-        public async Task<ProjectEntity> GetProjectEntityById(int id)
+        public async Task<ProjectEntity> GetProjectEntitybyIdAsync(int id)
         {
             var projects = await GetAllProjectEntitiesAsync();
 
@@ -64,7 +65,7 @@ namespace Projects.API.Services
                 );
         }
 
-        public async Task<TaskEntity> GetTaskEntityById(int id)
+        public async Task<TaskEntity> GetTaskEntitybyIdAsync(int id)
         {
             var tasks = await GetAllTaskEntitiesAsync();
 
@@ -81,7 +82,7 @@ namespace Projects.API.Services
                 );
         }
 
-        public async Task<UserEntity> GetUserEntityById(int id)
+        public async Task<UserEntity> GetUserEntitybyIdAsync(int id)
         {
             var tasks = await GetAllUserEntitiesAsync();
 
@@ -105,7 +106,7 @@ namespace Projects.API.Services
                 );
         }
 
-        public async Task<TeamEntity> GetTeamEntityById(int id)
+        public async Task<TeamEntity> GetTeamEntitybyIdAsync(int id)
         {
             var tasks = await GetAllTeamEntitiesAsync();
 
@@ -113,10 +114,80 @@ namespace Projects.API.Services
                 .FirstOrDefault();
         }
 
-        public bool AddProject(ProjectEntity project)
+        public bool AddTask(TaskEntity task)
         {
-            throw new NotImplementedException();
+            var taskModel = (binder as EntityBinderService).BindTask(task);
+
+            (unitOfWork.Tasks as TaskRepository).Add(taskModel);
+
+            return true;
         }
 
+        public bool AddUser(UserEntity user)
+        {
+            var userModel = (binder as EntityBinderService).BindUser(user);
+
+            (unitOfWork.Users as UserRepository).Add(userModel);
+
+            return true;
+        }
+
+        public bool AddTeam(TeamEntity team)
+        {
+            var teamModel = (binder as EntityBinderService).BindTeam(team);
+
+            (unitOfWork.Teams as TeamRepository).Add(teamModel);
+
+            return true;
+        }
+
+        public bool AddProject(ProjectEntity project)
+        {
+            var projectModel = (binder as EntityBinderService).BindProject(project);
+
+            (unitOfWork.Projects as ProjectRepository).Add(projectModel);
+
+            return true;
+        }
+
+        public bool DeleteProjectById(int id)
+        {
+            if ((unitOfWork.Projects as ProjectRepository).Count() < id - 1)
+                return false;
+
+            (unitOfWork.Projects as ProjectRepository).DeleteAt(id);
+
+            return true;
+        }
+
+        public bool DeleteTaskById(int id)
+        {
+            if ((unitOfWork.Tasks as TaskRepository).Count() < id - 1)
+                return false;
+
+            (unitOfWork.Tasks as TaskRepository).DeleteAt(id);
+
+            return true;
+        }
+
+        public bool DeleteTeamById(int id)
+        {
+            if ((unitOfWork.Teams as TeamRepository).Count() < id - 1)
+                return false;
+
+            (unitOfWork.Teams as TeamRepository).DeleteAt(id);
+
+            return true;
+        }
+
+        public bool DeleteUserById(int id)
+        {
+            if ((unitOfWork.Users as UserRepository).Count() < id - 1)
+                return false;
+
+            (unitOfWork.Users as UserRepository).DeleteAt(id);
+
+            return true;
+        }
     }
 }

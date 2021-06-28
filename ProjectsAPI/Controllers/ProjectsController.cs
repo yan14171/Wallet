@@ -15,12 +15,10 @@ namespace Projects.API.Controllers
     public class ProjectsController : ControllerBase
     {
         private readonly IEntityHandlerService entityHandler;
-        private readonly IQueryProcessingService queryProcessor;
 
-        public ProjectsController(IEntityHandlerService entityHandler, IQueryProcessingService queryProcessor)
+        public ProjectsController(IEntityHandlerService entityHandler)
         {
             this.entityHandler = entityHandler;
-            this.queryProcessor = queryProcessor;
         }
 
         [HttpGet]
@@ -41,7 +39,7 @@ namespace Projects.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> GetByID(int id)
         {
-            var project = await (entityHandler as EntityHandlerService).GetProjectEntityById(id);
+            var project = await entityHandler.GetProjectEntitybyIdAsync(id);
 
             if (project == null)
                 return NoContent();
@@ -50,21 +48,47 @@ namespace Projects.API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ProjectEntity))]
         public IActionResult Post([FromBody] ProjectEntity project)
         {
-            return Created("", project);
+            if (entityHandler.AddProject(project))
+                return Created("", project);
+
+            else return BadRequest();
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put([FromQuery]int id, [FromBody] ProjectEntity project)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> Put([FromQuery]int id, [FromBody] ProjectEntity project)
         {
-            return Ok(project);
+            if (id < 0)
+                return BadRequest();
+
+            if(project.Id != id)
+            project.Id = id;
+            
+            entityHandler
+                .DeleteProjectById(id);
+
+            entityHandler
+                .AddProject(project);
+
+            return Ok();
         }
 
-        [HttpPatch("{id}")]
-        public IActionResult Patch([FromQuery]int id, [FromBody] ProjectEntity project)
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult Delete([FromQuery]int id)
         {
-            return Ok(project);
+            if (id < 0)
+                return BadRequest();
+
+            entityHandler
+                .DeleteProjectById(id);
+
+            return NoContent();
         }
     }
 }

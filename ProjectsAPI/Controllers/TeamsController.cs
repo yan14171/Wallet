@@ -1,46 +1,95 @@
-﻿/*using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using ProjectsAccess.Entities;
-using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Projects.API.Interfaces;
+using Projects.API.Services;
+using Projects.Modelling.Entities;
 
-namespace Projects.API.Controllers
+namespace Teams.API.Controllers
 {
     [ApiController]
     [Route("api/teams")]
     public class TeamsController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult Get()
+        private readonly IEntityHandlerService entityHandler;
+        private readonly IQueryProcessingService queryProcessor;
+
+        public TeamsController(IEntityHandlerService entityHandler, IQueryProcessingService queryProcessor)
         {
-            return Ok();
+            this.entityHandler = entityHandler;
+            this.queryProcessor = queryProcessor;
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TeamEntity>))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> Get()
+        {
+            var Teams = await entityHandler.GetAllTeamEntitiesAsync();
+
+            if (Teams.Count() < 1)
+                return NoContent();
+
+            return Ok(Teams);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetByID([FromQuery] int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TeamEntity))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> GetByID(int id)
         {
-            return Ok(id);
+            var Team = await entityHandler.GetTeamEntitybyIdAsync(id);
+
+            if (Team == null)
+                return NoContent();
+
+            return Ok(Team);
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TeamEntity))]
         public IActionResult Post([FromBody] TeamEntity Team)
         {
-            return Created("", Team);
+            if (entityHandler.AddTeam(Team))
+                return Created("", Team);
+
+            else return BadRequest();
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put([FromQuery]int id, [FromBody] TeamEntity Team)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> Put([FromQuery] int id, [FromBody] TeamEntity Team)
         {
-            return Ok(Team);
+            if (id < 0)
+                return BadRequest();
+
+            if (Team.Id != id)
+                Team.Id = id;
+
+            entityHandler
+                .DeleteTeamById(id);
+
+            entityHandler
+                .AddTeam(Team);
+
+            return Ok();
         }
 
-        [HttpPatch("{id}")]
-        public IActionResult Patch([FromQuery]int id, [FromBody] TeamEntity Team)
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult Delete([FromQuery] int id)
         {
-            return Ok(Team);
+            if (id < 0)
+                return BadRequest();
+
+            entityHandler
+                .DeleteTeamById(id);
+
+            return NoContent();
         }
     }
 }
-*/

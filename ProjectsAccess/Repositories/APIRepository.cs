@@ -15,10 +15,11 @@ namespace Projects.DataAccess.Repositories
         {
             this.apiEndpoint = apiEndpoint;
 
-            _models = GetObjects(GetConnectionString<T>());
+            _models = GetObjects(GetConnectionString<T>())
+                      .ToList();
         }
 
-        private IEnumerable<T> _models;
+        private List<T> _models;
 
         private readonly string apiEndpoint;
 
@@ -90,6 +91,18 @@ namespace Projects.DataAccess.Repositories
 
              return @object;*/
         }
+
+        public void Add(T model)
+        {
+            _models.Add(model);
+        }
+
+        public void DeleteAt(int id)
+        {
+            _models.RemoveAt(id);
+        }
+
+        public int Count() => _models.Count();
 
 #endregion
 
