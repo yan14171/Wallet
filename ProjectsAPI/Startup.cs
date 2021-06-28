@@ -9,10 +9,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Projects.API.Interfaces;
 using Projects.API.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Projects.DataAccess.Interfaces;
+using Projects.DataAccess.Repositories;
+using Projects.Modelling.DTOs;
+using Projects.Modelling.Interfaces;
+using Projects.Modelling.Services;
 
 namespace Projects.API
 {
@@ -27,9 +28,38 @@ namespace Projects.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IQueryProcessingService, QueryProcessingService>();
-            services.AddSingleton<IEntityHandlerService, EntityHandlerService>();
+            services.AddSingleton<IEntityBinderService, EntityBinderService>();
 
+            services.AddSingleton<IRepository<Project>>(x => 
+                 new APIRepository<Project>("https://bsa21.azurewebsites.net/api"));
+
+            services.AddSingleton<IRepository<Task>>(x =>
+                 new APIRepository<Task>("https://bsa21.azurewebsites.net/api"));
+
+            services.AddSingleton<IRepository<Team>>(x =>
+                 new APIRepository<Team>("https://bsa21.azurewebsites.net/api"));
+
+            services.AddSingleton<IRepository<User>>(x =>
+                 new APIRepository<User>("https://bsa21.azurewebsites.net/api"));
+
+
+            services.AddSingleton<IUserRepository>(x =>
+                 new UserRepository("https://bsa21.azurewebsites.net/api"));
+
+            services.AddSingleton<ITaskRepository>(x =>
+                 new TaskRepository("https://bsa21.azurewebsites.net/api"));
+
+            services.AddSingleton<ITeamRepository>(x =>
+                 new TeamRepository("https://bsa21.azurewebsites.net/api"));
+
+            services.AddSingleton<IProjectRepository>(x =>
+                  new ProjectRepository("https://bsa21.azurewebsites.net/api"));
+
+            services.AddSingleton<IUnitOfWork, APIUnitOfWork>();
+            services.AddSingleton<IEntityHandlerService, EntityHandlerService>();
+            services.AddSingleton<IQueryProcessingService, QueryProcessingService>();
+
+      
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

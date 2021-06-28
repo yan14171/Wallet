@@ -3,11 +3,8 @@ using System.Text.Json.Serialization;
 
 namespace Projects.Modelling.DTOs
 {
-	public class User
+	public class User : DTOBase
 	{
-		[JsonPropertyName("id")]
-		public int Id { get; set; }
-
 		[JsonPropertyName("teamId")]
 		public int? TeamId { get; set; }
 

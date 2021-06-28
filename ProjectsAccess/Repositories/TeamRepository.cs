@@ -5,10 +5,6 @@ namespace Projects.DataAccess.Repositories
 {
     public class TeamRepository : APIRepository<Team>, ITeamRepository
     {
-        public TeamRepository()
-        {
-
-        }
         public TeamRepository(string APIendpoint)
         : base(APIendpoint)
         {

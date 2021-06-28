@@ -5,10 +5,6 @@ namespace Projects.DataAccess.Repositories
 {
     public class TaskRepository : APIRepository<Task>, ITaskRepository
     {
-        public TaskRepository()
-        {
-
-        }
         public TaskRepository(string APIendpoint)
         : base(APIendpoint)
         {

@@ -8,6 +8,7 @@ namespace Projects.Modelling.Services
 {
     public class EntityBinderService : IEntityBinderService
     {
+#region public
         public IEnumerable<UserEntity> BindUserEntities(IEnumerable<User> userModels)
         {
             IEnumerable<UserEntity> userEntities = CastToUserEntities(userModels);
@@ -48,7 +49,9 @@ namespace Projects.Modelling.Services
 
             return projectEntities;
         }
+#endregion
 
+#region private
         private IEnumerable<ProjectEntity> CastToProjectEntities(
             IEnumerable<Project> projectModels,
             IEnumerable<UserEntity> userEntities,
@@ -119,5 +122,6 @@ namespace Projects.Modelling.Services
             return userModels.Select(
                 n => new UserEntity(n));
         }
+#endregion
     }
 }

@@ -5,10 +5,6 @@ namespace Projects.DataAccess.Repositories
 {
     public class ProjectRepository : APIRepository<Project>, IProjectRepository
     {
-        public ProjectRepository()
-        {
-
-        }
         public ProjectRepository(string APIendpoint)
         :base(APIendpoint)
         {

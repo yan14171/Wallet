@@ -1,22 +1,24 @@
 ﻿using Projects.DataAccess.Interfaces;
+using Projects.Modelling.DTOs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Projects.DataAccess.Repositories
 {
-    public class APIRepository<T> : IRepository<T> where T : class, new()
+    public class APIRepository<T> : IRepository<T> where T : DTOBase, new()
     {
-        public APIRepository()
-        {
-
-        }
         public APIRepository(string apiEndpoint)
         {
             this.apiEndpoint = apiEndpoint;
+
+            _models = GetObjects(GetConnectionString<T>());
         }
+
+        private IEnumerable<T> _models;
 
         private readonly string apiEndpoint;
 
@@ -24,46 +26,69 @@ namespace Projects.DataAccess.Repositories
 
         public IEnumerable<T> GetAll()
         {
-            string connectionString = GetConnectionString<T>();
+            /*string connectionString = GetConnectionString<T>();
 
             IEnumerable<T> objects = GetObjects(connectionString);
 
-            return objects;
+            return objects;*/
+
+            return _models;
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            string connectionString = GetConnectionString<T>();
+            /* string connectionString = GetConnectionString<T>();
 
-            IEnumerable<T> objects = await GetObjectsAsync(connectionString);
+             IEnumerable<T> objects = await GetObjectsAsync(connectionString);
 
-            return objects;
+             return objects;*/
+
+            return _models;
         }
 
         public T GetById(int id)
         {
             if (id < 0) return new T();
 
-            string connectionString = GetConnectionString<T>();
+            var foundEntitities =
+                _models.Where(n => n.Id == id);
+
+            if (foundEntitities.Count() > 1 || foundEntitities.Count() < 1)
+                return new T();
+
+            return foundEntitities.First();
+
+           /* string connectionString = GetConnectionString<T>();
 
             connectionString += $"/{id}";
 
             T @object = GetObject(connectionString);
 
-            return @object;
+            return @object;*/
         }
 
         public async Task<T> GetByIdAsync(int id)
         {
+
             if (id < 0) return new T();
 
-            string connectionString = GetConnectionString<T>();
+            var foundEntitities =
+                _models.Where(n => n.Id == id);
 
-            connectionString += $"/{id}";
+            if (foundEntitities.Count() > 1 || foundEntitities.Count() < 1)
+                return new T();
 
-            T @object = await GetObjectAsync(connectionString);
+            return foundEntitities.First();
 
-            return @object;
+            /* if (id < 0) return new T();
+
+             string connectionString = GetConnectionString<T>();
+
+             connectionString += $"/{id}";
+
+             T @object = await GetObjectAsync(connectionString);
+
+             return @object;*/
         }
 
 #endregion
@@ -127,7 +152,7 @@ namespace Projects.DataAccess.Repositories
 
         private string GetConnectionString<U>()
         {
-            return apiEndpoint + "/" + typeof(U).Name + "s";
+            return apiEndpoint + "/" + typeof(T).Name + "s";
         }
 
 #endregion

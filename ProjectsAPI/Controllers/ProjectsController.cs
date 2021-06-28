@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Projects.API.Interfaces;
+using Projects.API.Services;
 using Projects.Modelling.Entities;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,9 +37,16 @@ namespace Projects.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetByID([FromQuery] int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProjectEntity))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> GetByID(int id)
         {
-            return Ok(id);
+            var project = await (entityHandler as EntityHandlerService).GetProjectEntityById(id);
+
+            if (project == null)
+                return NoContent();
+
+            return Ok(project);
         }
 
         [HttpPost]
