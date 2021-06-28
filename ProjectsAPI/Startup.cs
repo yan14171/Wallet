@@ -7,12 +7,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Projects.API.Interfaces;
+using Projects.API.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ProjectsAPI
+namespace Projects.API
 {
     public class Startup
     {
@@ -25,6 +27,8 @@ namespace ProjectsAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IQueryProcessingService, QueryProcessingService>();
+            services.AddSingleton<IEntityHandlerService, EntityHandlerService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

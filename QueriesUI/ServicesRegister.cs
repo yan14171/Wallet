@@ -3,11 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using ProjectsAccess;
-using System.Linq;
-using ProjectsAccess.Repositories;
-using ProjectsAccess.DataAccess.IRepositories;
-using ProjectsAccess.Services;
 
 namespace QueriesUI
 {

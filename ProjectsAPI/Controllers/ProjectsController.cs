@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ProjectsAccess.Entities;
-using System;
+using Projects.API.Interfaces;
+using Projects.Modelling.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,10 +13,26 @@ namespace Projects.API.Controllers
     [Route("api/projects")]
     public class ProjectsController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult Get()
+        private readonly IEntityHandlerService entityHandler;
+        private readonly IQueryProcessingService queryProcessor;
+
+        public ProjectsController(IEntityHandlerService entityHandler, IQueryProcessingService queryProcessor)
         {
-            return Ok();
+            this.entityHandler = entityHandler;
+            this.queryProcessor = queryProcessor;
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ProjectEntity>))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> Get()
+        {
+           var projects = await entityHandler.GetAllProjectEntitiesAsync();
+
+            if (projects.Count() < 1)
+                return NoContent();
+
+            return Ok(projects);
         }
 
         [HttpGet("{id}")]

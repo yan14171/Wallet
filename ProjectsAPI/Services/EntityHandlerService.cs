@@ -20,7 +20,7 @@ namespace Projects.API.Services
             this.binder = binder;
         }
 
-        public async Task<IEnumerable<ProjectEntity>> GetAllProjectEntities()
+        public async Task<IEnumerable<ProjectEntity>> GetAllProjectEntitiesAsync()
         {
             var projectModelsTask = (unitOfWork.Projects as ProjectRepository).GetAllAsync();
             var usersModelsTask = (unitOfWork.Users as UserRepository).GetAllAsync();

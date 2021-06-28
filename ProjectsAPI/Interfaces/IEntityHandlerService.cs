@@ -6,6 +6,6 @@ namespace Projects.API.Interfaces
 {
     public interface IEntityHandlerService
     {
-        Task<IEnumerable<ProjectEntity>> GetAllProjectEntities();
+        Task<IEnumerable<ProjectEntity>> GetAllProjectEntitiesAsync();
     }
 }

@@ -1,26 +1,19 @@
-﻿using Projects.Modelling.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Projects.API.Interfaces;
 
 namespace Projects.API.Services
 {
-    public class QueryProcessingService
+    public class QueryProcessingService : IQueryProcessingService
     {
+        private readonly IEntityHandlerService handler;
 
-        public QueryProcessingService(EntityHandle binder)
+        public QueryProcessingService(IEntityHandlerService handler)
         {
-            this.binder = binder;
+            this.handler = handler;
         }
 
-        /// <summary>
-        /// Отримати кількість тасків у проекті конкретного користувача (по id) (словник, де key буде проект, а value кількість тасків).
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        public Dictionary<ProjectEntity, int> GetTasksQuantityPerProject(int userId)
+     
+
+        /*  public Dictionary<ProjectEntity, int> GetTasksQuantityPerProject(int userId)
         {
             
             var projects = binder.BindProjectEntities();
@@ -280,6 +273,6 @@ namespace Projects.API.Services
                  LongestDesctiptionTask: !hasTasks? null : project.Tasks.Aggregate((a, b) => b.Description.Length > a.Description.Length ? b : a),
                  ShortestNameTask: !hasTasks? null : project.Tasks.Aggregate((a, b) => b.Name.Length < a.Name.Length ? b : a),
                  UsersQuantity: (project.Description.Length > 20 || project.Tasks.Count() < 3) ? project.Team.Users.Count() : 0);
-        }
+        }*/
     }
 }
