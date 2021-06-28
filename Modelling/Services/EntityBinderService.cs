@@ -1,11 +1,8 @@
 ﻿using Projects.Modelling.DTOs;
 using Projects.Modelling.Entities;
 using Projects.Modelling.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Projects.Modelling.Services
 {
@@ -27,7 +24,7 @@ namespace Projects.Modelling.Services
             return teamEntities;
         }
 
-        public IEnumerable<TaskEntity> BindTaskEntities(IEnumerable<Task> taskModels , IEnumerable<User> userModels)
+        public IEnumerable<TaskEntity> BindTaskEntities(IEnumerable<DTOs.Task> taskModels , IEnumerable<User> userModels)
         {
             IEnumerable<UserEntity> userEntities = CastToUserEntities(userModels);
 
@@ -41,11 +38,6 @@ namespace Projects.Modelling.Services
                                                               IEnumerable<User> userModels,
                                                               IEnumerable<Team> teamModels)
         {
-            projectModels = unitOfWork.Projects.GetAll();
-            taskModels = unitOfWork.Tasks.GetAll();
-            userModels = unitOfWork.Users.GetAll();
-            teamModels = unitOfWork.Teams.GetAll();
-
             IEnumerable<UserEntity> userEntities = CastToUserEntities(userModels);
 
             IEnumerable<TaskEntity> taskEntities = CastToTaskEntities(taskModels, userEntities);
@@ -53,37 +45,6 @@ namespace Projects.Modelling.Services
             IEnumerable<TeamEntity> teamEntities = CastToTeamEntities(teamModels, userEntities);
 
             IEnumerable<ProjectEntity> projectEntities = CastToProjectEntities(projectModels, userEntities, taskEntities, teamEntities);
-
-            return projectEntities;
-        }
-
-        public async Task<IEnumerable<ProjectEntity>> BindProjectEntitiesAsync()
-        {
-            var taskmodelsTask =
-            System.Threading.Tasks.Task.Run(
-                () => (unitOfWork.Tasks as TaskRepository).GetAllAsync());
-
-            var usermodelsTask =
-            System.Threading.Tasks.Task.Run(
-                 () => (unitOfWork.Users as UserRepository).GetAllAsync());
-
-            var teammodelsTask =
-            System.Threading.Tasks.Task.Run(
-              () => (unitOfWork.Teams as TeamRepository).GetAllAsync());
-
-            var projectmodelsTask =
-            System.Threading.Tasks.Task.Run(
-                 () => (unitOfWork.Projects as ProjectRepository).GetAllAsync());
-
-            await System.Threading.Tasks.Task.WhenAll(taskmodelsTask, usermodelsTask, teammodelsTask, projectmodelsTask);
-
-            IEnumerable<UserEntity> userEntities = CastToUserEntities(userModels = usermodelsTask.Result);
-
-            IEnumerable<TaskEntity> taskEntities = CastToTaskEntities(taskModels = taskmodelsTask.Result, userEntities);
-
-            IEnumerable<TeamEntity> teamEntities = CastToTeamEntities(teamModels = teammodelsTask.Result, userEntities);
-
-            IEnumerable<ProjectEntity> projectEntities = CastToProjectEntities(projectModels = projectmodelsTask.Result, userEntities, taskEntities, teamEntities);
 
             return projectEntities;
         }
@@ -141,7 +102,7 @@ namespace Projects.Modelling.Services
         }
 
         private IEnumerable<TaskEntity> CastToTaskEntities(
-            IEnumerable<ProjectsAccess.Models.Task> taskModels,
+            IEnumerable<DTOs.Task> taskModels,
             IEnumerable<UserEntity> performerEntities)
         {
             return taskModels.Join(

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ProjectsAccess.DataAccess.IRepositories
+namespace Projects.DataAccess.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
