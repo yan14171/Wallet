@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Json.Serialization;
 
-namespace ProjectsAccess.Models
+namespace Projects.Modelling.DTOs
 {
 	public class Team
 	{

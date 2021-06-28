@@ -1,8 +1,7 @@
-﻿using ProjectsAccess.Entities;
-using System;
+﻿
 using System.Collections.Generic;
 
-namespace ProjectsAccess.Services
+namespace Projects.Modelling.Interfaces
 {
     public interface IEntityBinderService
     {

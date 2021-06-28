@@ -1,7 +1,6 @@
-﻿using ProjectsAccess.Models;
-using System;
+﻿using System;
 
-namespace ProjectsAccess.Entities
+namespace Projects.Modelling.Entities
 {
 	public class TaskEntity
 	{

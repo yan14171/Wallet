@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ProjectsAccess.Entities
+namespace Projects.Modelling.Entities
 {
 	public class ProjectEntity
 	{
