@@ -1,15 +1,7 @@
-﻿using ProjectsAccess.DataAccess.IRepositories;
-using ProjectsAccess.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Projects.DataAccess.Interfaces;
 
-namespace ProjectsAccess.Repositories
+namespace Projects.DataAccess.Repositories
 { 
-
-    //maybe rename to APIUnitOfWork to emphasize the concrete API implementation
     public class APIUnitOfWork : IUnitOfWork
     {
         public APIUnitOfWork(IProjectRepository projects, ITaskRepository tasks, ITeamRepository teams, IUserRepository users)

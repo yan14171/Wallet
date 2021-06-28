@@ -1,12 +1,7 @@
-﻿using ProjectsAccess.DataAccess.IRepositories;
-using ProjectsAccess.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Projects.DataAccess.Interfaces;
+using Projects.Modelling.DTOs;
 
-namespace ProjectsAccess.Repositories
+namespace Projects.DataAccess.Repositories
 {
     public class TeamRepository : APIRepository<Team>, ITeamRepository
     {

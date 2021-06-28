@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace ProjectsAccess.Repositories
+namespace Projects.DataAccess.Repositories
 {
     public class APIRepository<T> : IRepository<T> where T : class, new()
     {
@@ -19,6 +19,8 @@ namespace ProjectsAccess.Repositories
         }
 
         private readonly string apiEndpoint;
+
+#region public:
 
         public IEnumerable<T> GetAll()
         {
@@ -64,6 +66,9 @@ namespace ProjectsAccess.Repositories
             return @object;
         }
 
+#endregion
+
+#region private
 
         private async Task<IEnumerable<T>> GetObjectsAsync(string connectionString)
         {
@@ -120,9 +125,11 @@ namespace ProjectsAccess.Repositories
             return @object;
         }
 
-        private string GetConnectionString<T>()
+        private string GetConnectionString<U>()
         {
-            return apiEndpoint + "/" + typeof(T).Name + "s";
+            return apiEndpoint + "/" + typeof(U).Name + "s";
         }
+
+#endregion
     }
 }

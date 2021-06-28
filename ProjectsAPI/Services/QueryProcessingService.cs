@@ -1,16 +1,16 @@
-﻿using System;
+﻿using Projects.Modelling.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectsAccess.Services
+namespace Projects.API.Services
 {
     public class QueryProcessingService
     {
-        private readonly IEntityBinderService binder;
 
-        public QueryProcessingService(IEntityBinderService binder)
+        public QueryProcessingService(EntityHandle binder)
         {
             this.binder = binder;
         }
@@ -22,6 +22,7 @@ namespace ProjectsAccess.Services
         /// <returns></returns>
         public Dictionary<ProjectEntity, int> GetTasksQuantityPerProject(int userId)
         {
+            
             var projects = binder.BindProjectEntities();
 
             return

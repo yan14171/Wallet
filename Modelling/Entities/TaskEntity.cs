@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Projects.Modelling.DTOs;
+using System;
 
 namespace Projects.Modelling.Entities
 {
