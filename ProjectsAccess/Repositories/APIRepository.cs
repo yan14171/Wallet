@@ -15,7 +15,7 @@ namespace Projects.DataAccess.Repositories
         {
             this.apiEndpoint = apiEndpoint;
 
-            _models = GetObjects(GetConnectionString<T>())
+            _models = GetObjects(apiEndpoint)
                       .ToList();
         }
 
@@ -161,11 +161,6 @@ namespace Projects.DataAccess.Repositories
             var @object = JsonSerializer.Deserialize<T>(content);
 
             return @object;
-        }
-
-        private string GetConnectionString<U>()
-        {
-            return apiEndpoint + "/" + typeof(T).Name + "s";
         }
 
 #endregion

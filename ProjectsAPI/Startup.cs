@@ -14,7 +14,7 @@ using Projects.DataAccess.Repositories;
 using Projects.Modelling.DTOs;
 using Projects.Modelling.Interfaces;
 using Projects.Modelling.Services;
-
+using System.Configuration;
 
 namespace Projects.API
 {
@@ -31,30 +31,18 @@ namespace Projects.API
         {
             services.AddSingleton<IEntityBinderService, EntityBinderService>();
 
-            services.AddSingleton<IRepository<Project>>(x => 
-                 new APIRepository<Project>("https://bsa21.azurewebsites.net/api"));
-
-            services.AddSingleton<IRepository<Task>>(x =>
-                 new APIRepository<Task>("https://bsa21.azurewebsites.net/api"));
-
-            services.AddSingleton<IRepository<Team>>(x =>
-                 new APIRepository<Team>("https://bsa21.azurewebsites.net/api"));
-
-            services.AddSingleton<IRepository<User>>(x =>
-                 new APIRepository<User>("https://bsa21.azurewebsites.net/api"));
-
 
             services.AddSingleton<IUserRepository>(x =>
-                 new UserRepository("https://bsa21.azurewebsites.net/api"));
+                 new UserRepository(Configuration["ConnectionStrings:Users"]));
 
             services.AddSingleton<ITaskRepository>(x =>
-                 new TaskRepository("https://bsa21.azurewebsites.net/api"));
+                 new TaskRepository(Configuration["ConnectionStrings:Tasks"]));
 
             services.AddSingleton<ITeamRepository>(x =>
-                 new TeamRepository("https://bsa21.azurewebsites.net/api"));
+                 new TeamRepository(Configuration["ConnectionStrings:Teams"]));
 
             services.AddSingleton<IProjectRepository>(x =>
-                  new ProjectRepository("https://bsa21.azurewebsites.net/api"));
+                  new ProjectRepository(Configuration["ConnectionStrings:Projects"]));
 
             services.AddSingleton<IUnitOfWork, APIUnitOfWork>();
             services.AddSingleton<IEntityHandlerService, EntityHandlerService>();
