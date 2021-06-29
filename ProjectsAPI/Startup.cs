@@ -15,6 +15,7 @@ using Projects.Modelling.DTOs;
 using Projects.Modelling.Interfaces;
 using Projects.Modelling.Services;
 
+
 namespace Projects.API
 {
     public class Startup
@@ -59,7 +60,6 @@ namespace Projects.API
             services.AddSingleton<IEntityHandlerService, EntityHandlerService>();
             services.AddSingleton<IQueryProcessingService, QueryProcessingService>();
 
-      
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

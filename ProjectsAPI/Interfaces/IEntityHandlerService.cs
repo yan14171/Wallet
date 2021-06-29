@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Projects.API.Services
+namespace Projects.API.Interfaces
 {
     public interface IEntityHandlerService
     {

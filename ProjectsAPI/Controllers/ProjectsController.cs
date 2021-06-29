@@ -60,7 +60,7 @@ namespace Projects.API.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Put([FromQuery]int id, [FromBody] ProjectEntity project)
+        public async Task<IActionResult> Put(int id, [FromBody] ProjectEntity project)
         {
             if (id < 0)
                 return BadRequest();
@@ -80,7 +80,7 @@ namespace Projects.API.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult Delete([FromQuery]int id)
+        public IActionResult Delete(int id)
         {
             if (id < 0)
                 return BadRequest();

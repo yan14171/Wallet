@@ -1,5 +1,4 @@
-﻿using Projects.API.Interfaces;
-using Projects.DataAccess.Interfaces;
+﻿using Projects.DataAccess.Interfaces;
 using Projects.DataAccess.Repositories;
 using Projects.Modelling.Entities;
 using Projects.Modelling.Interfaces;
@@ -8,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using Projects.Modelling.Services;
+using Projects.API.Interfaces;
 
 namespace Projects.API.Services
 {
@@ -43,9 +43,24 @@ namespace Projects.API.Services
 
         public async Task<ProjectEntity> GetProjectEntitybyIdAsync(int id)
         {
-            var projects = await GetAllProjectEntitiesAsync();
+            var usersModelsTask = (unitOfWork.Users as UserRepository).GetAllAsync();
+            var teamsModelsTask = (unitOfWork.Teams as TeamRepository).GetAllAsync();
+            var tasksModelsTask = (unitOfWork.Tasks as TaskRepository).GetAllAsync();
+            var projectsModelsTask = (unitOfWork.Projects as ProjectRepository).GetAllAsync();
 
-            return projects.Where(n => n.Id == id)
+            await Task.WhenAll(
+                               usersModelsTask,
+                               teamsModelsTask,
+                               tasksModelsTask,
+                               projectsModelsTask
+                               );
+
+            return
+                binder.BindProjectEntities(
+                    projectsModelsTask.Result.Where(n => n.Id == id),
+                    tasksModelsTask.Result,
+                    usersModelsTask.Result,
+                    teamsModelsTask.Result)
                 .FirstOrDefault();
         }
 
@@ -67,9 +82,18 @@ namespace Projects.API.Services
 
         public async Task<TaskEntity> GetTaskEntitybyIdAsync(int id)
         {
-            var tasks = await GetAllTaskEntitiesAsync();
+            var usersModelsTask = (unitOfWork.Users as UserRepository).GetAllAsync();
+            var tasksModelsTask = (unitOfWork.Tasks as TaskRepository).GetAllAsync();
 
-            return tasks.Where(n => n.Id == id)
+            await Task.WhenAll(
+                               usersModelsTask,
+                               tasksModelsTask
+                               );
+
+            return
+                binder.BindTaskEntities(
+                tasksModelsTask.Result.Where(n => n.Id == id),
+                usersModelsTask.Result)
                 .FirstOrDefault();
         }
 
@@ -84,16 +108,16 @@ namespace Projects.API.Services
 
         public async Task<UserEntity> GetUserEntitybyIdAsync(int id)
         {
-            var tasks = await GetAllUserEntitiesAsync();
+            var users = await GetAllUserEntitiesAsync();
 
-            return tasks.Where(n => n.Id == id)
+            return users.Where(n => n.Id == id)
                 .FirstOrDefault();
         }
 
         public async Task<IEnumerable<TeamEntity>> GetAllTeamEntitiesAsync()
         {
             var usersModelsTask = (unitOfWork.Users as UserRepository).GetAllAsync();
-            var teamsModelsTask = (unitOfWork.Tasks as TeamRepository).GetAllAsync();
+            var teamsModelsTask = (unitOfWork.Teams as TeamRepository).GetAllAsync();
 
             await Task.WhenAll(
                                usersModelsTask,
@@ -108,9 +132,18 @@ namespace Projects.API.Services
 
         public async Task<TeamEntity> GetTeamEntitybyIdAsync(int id)
         {
-            var tasks = await GetAllTeamEntitiesAsync();
+            var usersModelsTask = (unitOfWork.Users as UserRepository).GetAllAsync();
+            var teamsModelsTask = (unitOfWork.Teams as TeamRepository).GetAllAsync();
 
-            return tasks.Where(n => n.Id == id)
+            await Task.WhenAll(
+                               usersModelsTask,
+                               teamsModelsTask
+                               );
+
+            return
+                binder.BindTeamEntities(
+                teamsModelsTask.Result.Where(n => n.Id == id),
+                usersModelsTask.Result)
                 .FirstOrDefault();
         }
 

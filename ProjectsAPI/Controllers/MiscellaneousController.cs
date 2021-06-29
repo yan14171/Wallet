@@ -1,4 +1,7 @@
-﻿/*using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Projects.API.Interfaces;
+using Projects.API.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,47 +13,93 @@ namespace Projects.API.Controllers
     [Route("api/misc")]
     public class MiscellaneousController : ControllerBase
     {
-        [HttpGet]
-        public __ Get()
-        {
+        private readonly IQueryProcessingService queryHandler;
 
+        public MiscellaneousController(IQueryProcessingService queryHandler)
+        {
+            this.queryHandler = queryHandler;
+        }
+
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("tasksQuantity/{id}")]
+        public async Task<IActionResult> GetTasksQuantityPerProject(int id)
+        {
+            var QuantityByProject = await queryHandler.GetTasksQuantityPerProjectAsync(id);
+
+            return Ok(QuantityByProject);
         }
 
         [HttpGet]
-        public __ Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("tasks/{id}")]
+        public async Task<IActionResult> GetTasksPerPerformer(int id)
         {
+            var TasksPerPerfomer = await queryHandler.GetTasksPerPerformerAsync(id);
 
+            return Ok(TasksPerPerfomer);
+        }
+
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("tasksThisYear/{id}")]
+        public async Task<IActionResult> GetTasksPerPerformerThisYear(int id)
+        {
+            var TasksThisYear = await queryHandler.GetTasksPerPerformerFinishedThisYearAsync(id);
+
+            return Ok(TasksThisYear);
         }
 
         [HttpGet]
-        public __ Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("oldestTeams")]
+        public async Task<IActionResult> GetOldestTeams()
         {
+            var OldestTeams = await queryHandler.GetOldestTeamsAsync();
 
+            return Ok(OldestTeams);
         }
 
         [HttpGet]
-        public __ Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("tasksAlpha")]
+        public async Task<IActionResult> GetTasksPerPerformerAlphabetically()
         {
+            var TasksPerPerfomer = await queryHandler.GetTasksPerPerformerAlphabeticallyAsync();
 
+            return Ok(TasksPerPerfomer);
         }
 
         [HttpGet]
-        public __ Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Route("userInfo/{id}")]
+        public async Task<IActionResult> GetUserInfo(int id)
         {
+            DTOs.UserInfo userInfo;
 
+            try
+            {
+             userInfo = await queryHandler.GetUserInfoAsync(id);
+            }
+            catch
+            {
+                return NotFound("No projects with this author");
+            }
+
+            return Ok(userInfo);
         }
 
         [HttpGet]
-        public __ Get()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("projectsInfo")]
+        public async Task<IActionResult> GetProjectsInfo()
         {
+            var projectInfo = queryHandler.GetProjectsInfoAsync();
 
-        }
-
-        [HttpGet]
-        public __ Get()
-        {
-
+            return Ok(projectInfo);
         }
     }
 }
-*/

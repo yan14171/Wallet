@@ -1,4 +1,11 @@
 ﻿using Projects.API.Interfaces;
+using Projects.DTOs;
+using Projects.Modelling.DTOs;
+using Projects.Modelling.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Projects.API.Services
 {
@@ -11,46 +18,21 @@ namespace Projects.API.Services
             this.handler = handler;
         }
 
-     
-
-        /*  public Dictionary<ProjectEntity, int> GetTasksQuantityPerProject(int userId)
+        public async Task<IEnumerable<KeyValuePair<ProjectEntity, List<TaskEntity>>>> GetTasksQuantityPerProjectAsync(int userId)
         {
-            
-            var projects = binder.BindProjectEntities();
-
-            return
-            projects
-              .Where(n => n.Author.Id == userId)
-              .ToDictionary(n => n, n => n.Tasks.Count());
-        }
-
-        public async Task<Dictionary<ProjectEntity, int>> GetTasksQuantityPerProjectAsync(int userId)
-        {
-            var projects = await (binder as EntityBinderService).BindProjectEntitiesAsync();
+            var projects = await handler.GetAllProjectEntitiesAsync();
 
             var taskQuantityByTask =
                                     projects
                                     .Where(n => n.Author.Id == userId)
-                                    .ToDictionary(n => n, n => n.Tasks.Count());
+                                    .Select(n => new KeyValuePair<ProjectEntity, List<TaskEntity>>(n, n.Tasks.ToList()));
 
-            return taskQuantityByTask;
-        }
-
-        public IList<TaskEntity> GetTasksPerPerformer(int performerId)
-        {
-            var tasks = binder.BindTaskEntities();
-
-            return
-              tasks
-                .Where(n => n.Performer.Id == performerId)
-                .Where(n => n.Name.Count() < 45)
-                .ToList();
-
+            return taskQuantityByTask.ToArray();
         }
 
         public async Task<IList<TaskEntity>> GetTasksPerPerformerAsync(int performerId)
         {
-            var tasks = await (binder as EntityBinderService).BindTaskEntitiesAsync();
+            var tasks = await handler.GetAllTaskEntitiesAsync();
 
             try
             {
@@ -63,144 +45,60 @@ namespace Projects.API.Services
             catch { throw; }
         }
 
-        public IList<(int Id, string Name)> GetTasksPerPerformerFinishedThisYear(int performerId)
+        public async Task<IList<TaskInfo>> GetTasksPerPerformerFinishedThisYearAsync(int performerId)
         {
-            var tasks = binder.BindTaskEntities();
+            var tasks = await handler.GetAllTaskEntitiesAsync();
 
             return
                 tasks
                 .Where(n => n.Performer.Id == performerId)
-                .Where(n => n.State == Models.State.Finished)
-                .Where(n => n.FinishedAt.Value.Year == DateTime.Now.Year)
-                .Select(n => (Id: n.Id, Name: n.Name))
-                .ToList();
-        }
-
-        public async Task<IList<(int Id, string Name)>> GetTasksPerPerformerFinishedThisYearAsync(int performerId)
-        {
-            var tasks = await (binder as EntityBinderService).BindTaskEntitiesAsync();
-
-            return
-                tasks
-                .Where(n => n.Performer.Id == performerId)
-                .Where(n => n.State == Models.State.Finished)
+                .Where(n => n.State == State.Finished)
                 .Where(n => n.FinishedAt?.Year == DateTime.Now.Year)
-                .Select(n => (Id: n.Id, Name: n.Name))
+                .Select(n => new TaskInfo() { Id = n.Id, Name = n.Name })
                 .ToList();
         }
 
-        public IEnumerable<(int Id, string Name, IOrderedEnumerable<UserEntity> Users)> GetOldestUsersByTeam()
+        public async Task<IEnumerable<OldestUsersInfo>> GetOldestTeamsAsync()
         {
-            var teams = binder.BindTeamEntities();
-
-            return 
-                teams
-                  .Select(n => (Id: n.Id,
-                                Name: n.Name,
-                                Users: n.Users
-                                           .Where(user =>
-                                          (DateTime.Now.Year - user.BirthDay.Year) > 10)
-                                          .OrderByDescending(user => user.RegisteredAt)
-                                          ));
-        }
-
-        public async Task<IEnumerable<(int Id, string Name, IOrderedEnumerable<UserEntity> Users)>> GetOldestUsersByTeamAsync()
-        {
-            var teams = await (binder as EntityBinderService).BindTeamEntitiesAsync();
+            var teams = await handler.GetAllTeamEntitiesAsync();
 
             return
-                teams
-                  .Select(n => (Id: n.Id,
-                                Name: n.Name,
-                                Users: n.Users
-                                          .Where(user =>
-                                          (DateTime.Now.Year - user.BirthDay.Year) > 10)
-                                          .OrderByDescending(user => user.RegisteredAt)
-                                          ));
-        }
-            
-        public IDictionary<UserEntity, List<TaskEntity>> GetTasksPerPerformerAlphabetically()
-        {
-            var tasks = binder.BindTaskEntities();
-
-            return 
-                tasks
-                  .OrderByDescending(task => task.Name.Length)
-                  .GroupBy(task => task.Performer)
-                  .OrderBy(n => n.Key.FirstName)
-                  .ToDictionary(n => n.Key, n => n.ToList());
-        }
-
-        public async Task<IDictionary<UserEntity, List<TaskEntity>>> GetTasksPerPerformerAlphabeticallyAsync()
-        {
-            var tasks = await (binder as EntityBinderService).BindTaskEntitiesAsync();
-
-            return 
-                tasks
-                  .OrderByDescending(task => task.Name.Length)
-                  .GroupBy(task => task.Performer)
-                  .OrderBy(n => n.Key.FirstName)
-                  .ToDictionary(n => n.Key, n => n.ToList());
-        }
-
-        //Throws InvalidOperation if no projects were found
-        public (UserEntity User, ProjectEntity LastProject, int LastProjectTasksQuantity, int UnhandledTasksQuantity, TaskEntity LongestTask) GetUserInfo(int userId)
-        {
-            var users = binder.BindUserEntities();
-            var projects = binder.BindProjectEntities();
-            var tasks = binder.BindTaskEntities();
-
-            try
-            {
-                return
-                 (from user in users
-                  where user.Id == userId
-                  let lastProject = projects
-                                        .Where(n => n.Author.Id == user.Id)
-                                        .Aggregate((a, b) => b.CreatedAt > a.CreatedAt ? b : a)
-                  let lastProjectTasksQuantity = lastProject.Tasks.Count()
-                  let userTasks = tasks
-                                    .Where(n => n.Performer.Id == user.Id)
-                  let unhandledTasksQuantity = userTasks
-                                         .Where(n => n.State == Models.State.Canceled || n.State == Models.State.InProgress)
-                                         .Count()
-                  let longestTask = userTasks.Aggregate((a, b) =>
+                teams.Where( team =>
+                           team.Users.All(user =>
+                           (DateTime.Now.Year - user.BirthDay.Year) > 10))
+                  .Select(n => new OldestUsersInfo()
                   {
-                      if (!b.FinishedAt.HasValue)
-                      {
-                          if (a.FinishedAt.HasValue)
-                              return b;
+                      Id = n.Id,
+                      Name = n.Name,
+                      Users = n.Users
+                               .OrderByDescending(user => user.RegisteredAt)
+                  });
+        }
 
-                          else
-                              return b.CreatedAt < a.CreatedAt ? b : a;
-                      }
-                      else
-                      {
-                          if (!a.FinishedAt.HasValue)
-                              return a;
+        public async Task<IEnumerable<KeyValuePair<UserEntity, List<TaskEntity>>>> GetTasksPerPerformerAlphabeticallyAsync()
+        {
+            var tasks = await handler.GetAllTaskEntitiesAsync();
 
-                          else
-                              return (b.FinishedAt - b.CreatedAt).Value > (a.FinishedAt - a.CreatedAt).Value ? b : a;
-                      }
-                  })
-                  select
-                  (user, lastProject, lastProjectTasksQuantity, unhandledTasksQuantity, longestTask))
-                  .FirstOrDefault();
-            }
-            catch { throw; }
+            return
+                tasks
+                  .OrderByDescending(task => task.Name.Length)
+                  .GroupBy(task => task.Performer)
+                  .OrderBy(n => n.Key.FirstName)
+
+                  .Select(n => new KeyValuePair<UserEntity, List<TaskEntity>>(n.Key, n.ToList()));
         }
 
         //Throws InvalidOperation if no projects were found
-        public async Task<(UserEntity User, ProjectEntity LastProject, int LastProjectTasksQuantity, int UnhandledTasksQuantity, TaskEntity LongestTask)> GetUserInfoAsync(int userId)
+        public async Task<UserInfo> GetUserInfoAsync(int userId)
         {
             var usersTask =
-            (binder as EntityBinderService).BindUserEntitiesAsync();
+            handler.GetAllUserEntitiesAsync();
 
             var projectsTask =
-            (binder as EntityBinderService).BindProjectEntitiesAsync();
+            handler.GetAllProjectEntitiesAsync();
 
             var tasksTask =
-            (binder as EntityBinderService).BindTaskEntitiesAsync();
+            handler.GetAllTaskEntitiesAsync();
 
             await System.Threading.Tasks.Task.WhenAll(usersTask, projectsTask, projectsTask);
 
@@ -220,7 +118,7 @@ namespace Projects.API.Services
                   let userTasks = tasks
                                     .Where(n => n.Performer.Id == user.Id)
                   let unhandledTasksQuantity = userTasks
-                                         .Where(n => n.State == Models.State.Canceled || n.State == Models.State.InProgress)
+                                         .Where(n => n.State == State.Canceled || n.State == State.InProgress)
                                          .Count()
                   let longestTask = userTasks.Aggregate((a, b) =>
                   {
@@ -241,38 +139,46 @@ namespace Projects.API.Services
                               return (b.FinishedAt - b.CreatedAt).Value > (a.FinishedAt - a.CreatedAt).Value ? b : a;
                       }
                   })
-                  select
-                  (user, lastProject, lastProjectTasksQuantity, unhandledTasksQuantity, longestTask))
+                  select new UserInfo()
+                  {
+                      User = user,
+                      LastProject = lastProject,
+                      LastProjectTasksQuantity = lastProjectTasksQuantity,
+                      UnhandledTasksQuantity = unhandledTasksQuantity,
+                      LongetsTask = longestTask
+                  })
                   .FirstOrDefault();
             }
             catch { throw; }
         }
 
-        public IEnumerable<(ProjectEntity Project, TaskEntity LongestTask, TaskEntity ShortestTask, int UsersQuantity)> GetProjectsInfo()
+        public async Task<IEnumerable<ProjectInfo>> GetProjectsInfoAsync()
         {
-            var projects = binder.BindProjectEntities();
-
-            return
-                from project in projects
-                select (
-                Project: project,
-                LongestDesctiptionTask: project.Tasks?.Aggregate((a, b) => b.Description.Length > a.Description.Length ? b : a),
-                ShortestNameTask: project.Tasks?.Aggregate((a, b) => b.Name.Length < a.Name.Length ? b : a),
-                UsersQuantity: (project.Description.Length > 20 || project.Tasks.Count() < 3) ? project.Team.Users.Count() : 0);
-        }
-
-        public async Task<IEnumerable<(ProjectEntity Project, TaskEntity LongestTask, TaskEntity ShortestTask, int UsersQuantity)>> GetProjectsInfoAsync()
-        {
-            var projects = await (binder as EntityBinderService).BindProjectEntitiesAsync();
+            var projects = await handler.GetAllProjectEntitiesAsync();
 
             return
                  from project in projects
-                 let hasTasks = project.Tasks.Count()>0
-                 select (
-                 Project: project,
-                 LongestDesctiptionTask: !hasTasks? null : project.Tasks.Aggregate((a, b) => b.Description.Length > a.Description.Length ? b : a),
-                 ShortestNameTask: !hasTasks? null : project.Tasks.Aggregate((a, b) => b.Name.Length < a.Name.Length ? b : a),
-                 UsersQuantity: (project.Description.Length > 20 || project.Tasks.Count() < 3) ? project.Team.Users.Count() : 0);
-        }*/
+                 let hasTasks = project.Tasks.Count() > 0
+                 select new ProjectInfo()
+                 {
+                     Project = project,
+                     LongestTask = !hasTasks ?
+                                        null :
+                                        project.Tasks
+                                                .Aggregate((a, b) =>
+                                                           b.Description.Length > a.Description.Length ? b : a),
+
+                     ShortestTask = !hasTasks ?
+                                         null :
+                                         project.Tasks
+                                                .Aggregate((a, b) =>
+                                                           b.Name.Length < a.Name.Length ? b : a),
+
+                     UsersQuantity = (project.Description.Length > 20 || project.Tasks.Count() < 3) ?
+                                                                         project.Team.Users.Count() :
+                                                                         0
+                 };
+
+        }
     }
 }

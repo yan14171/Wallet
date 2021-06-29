@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Projects.API.Interfaces;
 using Projects.API.Services;
 using Projects.Modelling.Entities;
+using Projects.API.Interfaces;
 
 namespace Users.API.Controllers
 {
@@ -61,7 +61,7 @@ namespace Users.API.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Put([FromQuery] int id, [FromBody] UserEntity User)
+        public async Task<IActionResult> Put(int id, [FromBody] UserEntity User)
         {
             if (id < 0)
                 return BadRequest();
@@ -81,7 +81,7 @@ namespace Users.API.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult Delete([FromQuery] int id)
+        public IActionResult Delete(int id)
         {
             if (id < 0)
                 return BadRequest();

@@ -99,7 +99,7 @@ namespace Projects.DataAccess.Repositories
 
         public void DeleteAt(int id)
         {
-            _models.RemoveAt(id);
+            _models.RemoveAll(n => n.Id == id);
         }
 
         public int Count() => _models.Count();

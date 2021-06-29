@@ -61,7 +61,7 @@ namespace Tasks.API.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Put([FromQuery] int id, [FromBody] TaskEntity Task)
+        public async Task<IActionResult> Put(int id, [FromBody] TaskEntity Task)
         {
             if (id < 0)
                 return BadRequest();
@@ -81,7 +81,7 @@ namespace Tasks.API.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult Delete([FromQuery] int id)
+        public IActionResult Delete(int id)
         {
             if (id < 0)
                 return BadRequest();
