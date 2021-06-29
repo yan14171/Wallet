@@ -55,7 +55,7 @@ namespace Projects.DataAccess.Repositories
                 _models.Where(n => n.Id == id);
 
             if (foundEntitities.Count() > 1 || foundEntitities.Count() < 1)
-                return new T();
+                return null;
 
             return foundEntitities.First();
 

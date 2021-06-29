@@ -38,13 +38,13 @@ namespace Tasks.API.Controllers
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TaskEntity))]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByID(int id)
         {
             var Task = await entityHandler.GetTaskEntitybyIdAsync(id);
 
             if (Task == null)
-                return NoContent();
+                return NotFound();
 
             return Ok(Task);
         }

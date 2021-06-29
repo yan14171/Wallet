@@ -18,10 +18,10 @@ namespace Projects.QueriesUI.Services
         {
             while (true)
             {
-                var taskInfo= new UI(new[]{ "IEntityService", "IQueryService" } ,
+                var taskInfo= new UI(new[]{ "EntityService", "QueryService" } ,
                                      new[]{ "Work with entities", "Work with queries" }).GetTaskNumber();
 
-                var type = Type.GetType("Projects.QueriesUI.Services." + taskInfo.Method.Trim('I'));
+                var type = Type.GetType("Projects.QueriesUI.Services." + taskInfo.Method);
 
                 var method =
                 type.GetMethod("Run");
@@ -33,47 +33,7 @@ namespace Projects.QueriesUI.Services
                 Console.Clear();
             }
         }
-
-      /*  private async Task RunTaskOnNumber(int taskNumber, int inputId = 0)
-        {
-            switch (taskNumber)
-            {
-                case 1:
-                    await ShowTasksQuantityPerProject(inputId);
-                    break;
-                case 2:
-                    await ShowTasksForPerformer(inputId);
-                    break;
-                case 3:
-                    await ShowTasksPerPerformerFromThisYear(inputId);
-                    break;
-                case 4:
-                    await ShowOldestUsersByTeam();
-                    break;
-                case 5:
-                    await ShowTasksPerPerformer();
-                    break;
-                case 6:
-                    await ShowUserInfo(inputId);
-                    break;
-                case 7:
-                    await ShowProjectsInfo();
-                    break;
-                default:
-                    Console.WriteLine("Task number is wrong");
-                    break;
-            }
-        }
-*/
-     
-
-        private bool BasicCheckId(int userId)
-        {
-            if (userId < 0)
-                return false;
-
-            return true;
-        }
+ 
 
     }
 }

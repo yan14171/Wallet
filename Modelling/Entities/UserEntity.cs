@@ -33,5 +33,16 @@ namespace Projects.Modelling.Entities
 		public DateTime RegisteredAt { get; set; }
 
 		public DateTime BirthDay { get; set; }
+
+        public override string ToString()
+        {
+			return $"Id : {Id}|\n" +
+				$" First Name : {FirstName}|\n " +
+				$"Last Name : {LastName}|\n " +
+				$"Email: {Email}|\n" +
+				$"Registered At : {RegisteredAt}|\n " +
+				$"Birth Day : {BirthDay}|\n ";
+		}
 	}
 }
+

@@ -38,5 +38,25 @@ namespace Projects.Modelling.Entities
 		public DateTime Deadline { get; set; }
 
 		public DateTime CreatedAt { get; set; }
-	}
-}
+
+        public override string ToString()
+        {
+			var tasksInfo = string.Empty;
+
+            foreach (var item in Tasks)
+            {
+				tasksInfo += item.ToString();
+            }
+
+			return $"Id : {Id}|\n" +
+				$" Author : {Author.ToString()}|\n " +
+				$"Team : {Team.ToString()}|\n " +
+				$"Tasks : {tasksInfo}|\n" +
+				$" Name : {Name}|\n " +
+				$"Description : {Description}|\n " +
+				$"DeadLine : {Deadline}|\n Created At : {CreatedAt}|" +
+				$"/n"; 
+			}
+        }
+    }
+

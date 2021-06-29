@@ -39,13 +39,13 @@ namespace Projects.API.Controllers
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProjectEntity))]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByID(int id)
         {
             var project = await entityHandler.GetProjectEntitybyIdAsync(id);
 
             if (project == null)
-                return NoContent();
+                return NotFound();
 
             return Ok(project);
         }

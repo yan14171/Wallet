@@ -38,13 +38,13 @@ namespace Teams.API.Controllers
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TeamEntity))]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByID(int id)
         {
             var Team = await entityHandler.GetTeamEntitybyIdAsync(id);
 
             if (Team == null)
-                return NoContent();
+                return NotFound();
 
             return Ok(Team);
         }

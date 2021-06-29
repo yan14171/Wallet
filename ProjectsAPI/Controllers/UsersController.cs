@@ -25,13 +25,13 @@ namespace Users.API.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<UserEntity>))]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get()
         {
             var Users = await entityHandler.GetAllUserEntitiesAsync();
 
             if (Users.Count() < 1)
-                return NoContent();
+                return NotFound();
 
             return Ok(Users);
         }

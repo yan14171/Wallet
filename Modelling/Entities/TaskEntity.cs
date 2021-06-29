@@ -35,5 +35,18 @@ namespace Projects.Modelling.Entities
 		public DateTime CreatedAt { get; set; }
 
 		public DateTime? FinishedAt { get; set; }
+
+        public override string ToString()
+        {
+			return $"Id : {Id}|\n" +
+				$" Performer : {Performer.ToString()}|\n " +
+				$"Team : {Name}|\n " +
+				$"Description : {Description}|\n " +
+				$"State : {State}|/n" +
+				$"CreatedAt : {CreatedAt}|\n " +
+				$"Finished At : {FinishedAt}|" +
+				$"/n";
+		}
 	}
 }
+

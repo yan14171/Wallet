@@ -94,7 +94,7 @@ namespace Projects.API.Controllers
         [Route("projectsInfo")]
         public async Task<IActionResult> GetProjectsInfo()
         {
-            var projectInfo = queryHandler.GetProjectsInfoAsync();
+            var projectInfo = await queryHandler.GetProjectsInfoAsync();
 
             return Ok(projectInfo);
         }

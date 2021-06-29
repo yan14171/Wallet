@@ -25,5 +25,22 @@ namespace Projects.Modelling.Entities
 		public IEnumerable<UserEntity> Users { get; set; }
 
 		public DateTime CreatedAt { get; set; }
+
+        public override string ToString()
+        {
+			var users = string.Empty;
+
+			foreach (var item in users)
+			{
+				users += item.ToString();
+			}
+
+			return $"Id : {Id}|\n" +
+				$"Users : {users}|\n" +
+				$" Name : {Name}|\n " +
+				$"Created At : {CreatedAt}|" +
+				$"/n";
+		}
 	}
 }
+
