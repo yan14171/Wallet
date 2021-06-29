@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace QueriesUI
+namespace Projects.Interfaces.QueriesUI
 {
     interface IApplicationInterface
     {

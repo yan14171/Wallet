@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Projects.API.Interfaces;
 using Projects.API.Services;
+using Projects.Modelling.DTOs;
 using Projects.Modelling.Entities;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,12 @@ namespace Projects.API.Controllers
     public class ProjectsController : ControllerBase
     {
         private readonly IEntityHandlerService entityHandler;
+        private readonly IDTOHandlerService dtoHandler;
 
-        public ProjectsController(IEntityHandlerService entityHandler)
+        public ProjectsController(IEntityHandlerService entityHandler, IDTOHandlerService dtoHandler)
         {
             this.entityHandler = entityHandler;
+            this.dtoHandler = dtoHandler;
         }
 
         [HttpGet]
@@ -49,9 +52,9 @@ namespace Projects.API.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ProjectEntity))]
-        public IActionResult Post([FromBody] ProjectEntity project)
+        public IActionResult Post([FromBody] Project project)
         {
-            if (entityHandler.AddProject(project))
+            if (dtoHandler.TryAddProject(project))
                 return Created("", project);
 
             else return BadRequest();
@@ -60,7 +63,7 @@ namespace Projects.API.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Put(int id, [FromBody] ProjectEntity project)
+        public async Task<IActionResult> Put(int id, [FromBody] Project project)
         {
             if (id < 0)
                 return BadRequest();
@@ -68,10 +71,10 @@ namespace Projects.API.Controllers
             if(project.Id != id)
             project.Id = id;
             
-            entityHandler
+            dtoHandler
                 .DeleteProjectById(id);
 
-            entityHandler
+            dtoHandler
                 .AddProject(project);
 
             return Ok();
@@ -85,7 +88,7 @@ namespace Projects.API.Controllers
             if (id < 0)
                 return BadRequest();
 
-            entityHandler
+            dtoHandler
                 .DeleteProjectById(id);
 
             return NoContent();

@@ -1,4 +1,5 @@
-﻿using Projects.Modelling.Entities;
+﻿using Projects.Modelling.DTOs;
+using Projects.Modelling.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,14 +7,6 @@ namespace Projects.API.Interfaces
 {
     public interface IEntityHandlerService
     {
-        bool AddProject(ProjectEntity project);
-        bool AddTask(TaskEntity task);
-        bool AddTeam(TeamEntity team);
-        bool AddUser(UserEntity user);
-        bool DeleteProjectById(int id);
-        bool DeleteTaskById(int id);
-        bool DeleteTeamById(int id);
-        bool DeleteUserById(int id);
         Task<IEnumerable<ProjectEntity>> GetAllProjectEntitiesAsync();
         Task<IEnumerable<TaskEntity>> GetAllTaskEntitiesAsync();
         Task<IEnumerable<TeamEntity>> GetAllTeamEntitiesAsync();

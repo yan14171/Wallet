@@ -1,18 +1,17 @@
-﻿using ProjectsAccess.Services;
+﻿
+using Projects.Modelling.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace QueriesUI
+namespace Projects.QueriesUI
 {
     class ApplicationInterface : IApplicationInterface
     {
-        private readonly QueryProcessingService queryProcessor;
+        private readonly IEntityBinderService entityBinder;
 
-        public ApplicationInterface(QueryProcessingService queryProcessor)
+        public ApplicationInterface( IEntityBinderService entityBinder)
         {
-            this.queryProcessor = queryProcessor;
+            this.entityBinder = entityBinder;
         }
 
         public async Task RunAsync()

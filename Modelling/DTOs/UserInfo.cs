@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Projects.DTOs
+namespace Projects.Modelling.DTOs
 {
     public class UserInfo
     {

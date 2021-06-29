@@ -1,10 +1,12 @@
 ﻿using Autofac;
+using Projects.Modelling.Interfaces;
+using Projects.Modelling.Services;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace QueriesUI
+namespace Projects.QueriesUI
 {
     class ServicesRegister
     {
@@ -12,34 +14,8 @@ namespace QueriesUI
         {
             ContainerBuilder builder = new ContainerBuilder();
 
-            builder.RegisterGeneric(typeof(APIRepository<>))
-                   .As(typeof(IRepository<>))
-                .WithParameter(new TypedParameter(typeof(string), "https://bsa21.azurewebsites.net/api"));
-
-            builder.RegisterType<ProjectRepository>()
-                .As<IProjectRepository>()
-                .WithParameter(new TypedParameter(typeof(string), "https://bsa21.azurewebsites.net/api"));
-
-            builder.RegisterType<TeamRepository>()
-              .As<ITeamRepository>()
-              .WithParameter(new TypedParameter(typeof(string), "https://bsa21.azurewebsites.net/api"));
-
-            builder.RegisterType<TaskRepository>()
-              .As<ITaskRepository>()
-              .WithParameter(new TypedParameter(typeof(string), "https://bsa21.azurewebsites.net/api"));
-
-            builder.RegisterType<UserRepository>()
-              .As<IUserRepository>()
-              .WithParameter(new TypedParameter(typeof(string), "https://bsa21.azurewebsites.net/api"));
-
-            builder.RegisterType<APIUnitOfWork>()
-             .As<IUnitOfWork>();
-
-            builder.RegisterType<EntityBinderService>()
-             .As<IEntityBinderService>();
-
-            builder.RegisterType<QueryProcessingService>()
-                .AsSelf();
+            builder.RegisterType<IEntityBinderService>()
+                .As<EntityBinderService>();
 
             builder.RegisterType<ApplicationInterface>()
                 .As<IApplicationInterface>();

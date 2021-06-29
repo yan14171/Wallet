@@ -1,8 +1,8 @@
 ﻿using Autofac;
-using System;
+using Projects.Modelling;
 using System.Threading.Tasks;
 
-namespace QueriesUI
+namespace Projects.QueriesUI
 {
     class Program
     {

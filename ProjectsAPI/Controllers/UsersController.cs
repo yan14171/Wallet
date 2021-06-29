@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Projects.API.Services;
 using Projects.Modelling.Entities;
 using Projects.API.Interfaces;
+using Projects.Modelling.DTOs;
 
 namespace Users.API.Controllers
 {
@@ -14,12 +15,12 @@ namespace Users.API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IEntityHandlerService entityHandler;
-        private readonly IQueryProcessingService queryProcessor;
+        private readonly IDTOHandlerService dtoHandler;
 
-        public UsersController(IEntityHandlerService entityHandler, IQueryProcessingService queryProcessor)
+        public UsersController(IEntityHandlerService entityHandler, IDTOHandlerService dtoHandler)
         {
             this.entityHandler = entityHandler;
-            this.queryProcessor = queryProcessor;
+            this.dtoHandler = dtoHandler;
         }
 
         [HttpGet]
@@ -50,9 +51,9 @@ namespace Users.API.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserEntity))]
-        public IActionResult Post([FromBody] UserEntity User)
+        public IActionResult Post([FromBody] User User)
         {
-            if (entityHandler.AddUser(User))
+            if (dtoHandler.TryAddUser(User))
                 return Created("", User);
 
             else return BadRequest();
@@ -61,7 +62,7 @@ namespace Users.API.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Put(int id, [FromBody] UserEntity User)
+        public async Task<IActionResult> Put(int id, [FromBody] User User)
         {
             if (id < 0)
                 return BadRequest();
@@ -69,10 +70,10 @@ namespace Users.API.Controllers
             if (User.Id != id)
                 User.Id = id;
 
-            entityHandler
+            dtoHandler
                 .DeleteUserById(id);
 
-            entityHandler
+            dtoHandler
                 .AddUser(User);
 
             return Ok();
@@ -86,7 +87,7 @@ namespace Users.API.Controllers
             if (id < 0)
                 return BadRequest();
 
-            entityHandler
+            dtoHandler
                 .DeleteUserById(id);
 
             return NoContent();

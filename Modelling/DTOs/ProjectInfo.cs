@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace Projects.DTOs
+namespace Projects.Modelling.DTOs
 {
     public class ProjectInfo
     {

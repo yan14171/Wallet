@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Projects.API.Interfaces;
 using Projects.API.Services;
 using Projects.Modelling.Entities;
+using Projects.Modelling.DTOs;
 
 namespace Tasks.API.Controllers
 {
@@ -14,12 +15,12 @@ namespace Tasks.API.Controllers
     public class TasksController : ControllerBase
     {
         private readonly IEntityHandlerService entityHandler;
-        private readonly IQueryProcessingService queryProcessor;
+        private readonly IDTOHandlerService dtoHandler;
 
-        public TasksController(IEntityHandlerService entityHandler, IQueryProcessingService queryProcessor)
+        public TasksController(IEntityHandlerService entityHandler, IDTOHandlerService dtoHandler)
         {
             this.entityHandler = entityHandler;
-            this.queryProcessor = queryProcessor;
+            this.dtoHandler = dtoHandler;
         }
 
         [HttpGet]
@@ -50,9 +51,9 @@ namespace Tasks.API.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TaskEntity))]
-        public IActionResult Post([FromBody] TaskEntity Task)
+        public IActionResult Post([FromBody] Projects.Modelling.DTOs.Task Task)
         {
-            if (entityHandler.AddTask(Task))
+            if (dtoHandler.TryAddTask(Task))
                 return Created("", Task);
 
             else return BadRequest();
@@ -61,7 +62,7 @@ namespace Tasks.API.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Put(int id, [FromBody] TaskEntity Task)
+        public IActionResult Put(int id, [FromBody] Projects.Modelling.DTOs.Task Task)
         {
             if (id < 0)
                 return BadRequest();
@@ -69,10 +70,10 @@ namespace Tasks.API.Controllers
             if (Task.Id != id)
                 Task.Id = id;
 
-            entityHandler
+            dtoHandler
                 .DeleteTaskById(id);
 
-            entityHandler
+            dtoHandler
                 .AddTask(Task);
 
             return Ok();
@@ -86,7 +87,7 @@ namespace Tasks.API.Controllers
             if (id < 0)
                 return BadRequest();
 
-            entityHandler
+            dtoHandler
                 .DeleteTaskById(id);
 
             return NoContent();

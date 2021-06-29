@@ -45,6 +45,7 @@ namespace Projects.API
                   new ProjectRepository(Configuration["ConnectionStrings:Projects"]));
 
             services.AddSingleton<IUnitOfWork, APIUnitOfWork>();
+            services.AddSingleton<IDTOHandlerService, DTOHandlerService>();
             services.AddSingleton<IEntityHandlerService, EntityHandlerService>();
             services.AddSingleton<IQueryProcessingService, QueryProcessingService>();
 

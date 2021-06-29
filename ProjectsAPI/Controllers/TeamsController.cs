@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Projects.API.Services;
 using Projects.Modelling.Entities;
 using Projects.API.Interfaces;
+using Projects.Modelling.DTOs;
 
 namespace Teams.API.Controllers
 {
@@ -14,12 +15,12 @@ namespace Teams.API.Controllers
     public class TeamsController : ControllerBase
     {
         private readonly IEntityHandlerService entityHandler;
-        private readonly IQueryProcessingService queryProcessor;
+        private readonly IDTOHandlerService dtoHandler;
 
-        public TeamsController(IEntityHandlerService entityHandler, IQueryProcessingService queryProcessor)
+        public TeamsController(IEntityHandlerService entityHandler, IDTOHandlerService dtoHandler)
         {
             this.entityHandler = entityHandler;
-            this.queryProcessor = queryProcessor;
+            this.dtoHandler = dtoHandler;
         }
 
         [HttpGet]
@@ -50,9 +51,9 @@ namespace Teams.API.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TeamEntity))]
-        public IActionResult Post([FromBody] TeamEntity Team)
+        public IActionResult Post([FromBody] Team Team)
         {
-            if (entityHandler.AddTeam(Team))
+            if (dtoHandler.TryAddTeam(Team))
                 return Created("", Team);
 
             else return BadRequest();
@@ -61,7 +62,7 @@ namespace Teams.API.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Put(int id, [FromBody] TeamEntity Team)
+        public IActionResult Put(int id, [FromBody] Team Team)
         {
             if (id < 0)
                 return BadRequest();
@@ -69,10 +70,10 @@ namespace Teams.API.Controllers
             if (Team.Id != id)
                 Team.Id = id;
 
-            entityHandler
+            dtoHandler
                 .DeleteTeamById(id);
 
-            entityHandler
+            dtoHandler
                 .AddTeam(Team);
 
             return Ok();
@@ -86,7 +87,7 @@ namespace Teams.API.Controllers
             if (id < 0)
                 return BadRequest();
 
-            entityHandler
+            dtoHandler
                 .DeleteTeamById(id);
 
             return NoContent();

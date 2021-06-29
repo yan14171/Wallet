@@ -56,58 +56,6 @@ namespace Projects.Modelling.Services
             return projectEntities;
         }
         
-        public Project BindProject(ProjectEntity entity)
-        {
-            return new Project()
-            {
-                Id = entity.Id,
-                AuthorId = entity.Author.Id,
-                TeamId = entity.Team.Id,
-                Name = entity.Name,
-                Description = entity.Description,
-                CreatedAt = entity.CreatedAt,
-                Deadline = entity.Deadline,
-            };
-        }
-
-        public Task BindTask(TaskEntity task)
-        {
-            return new Task()
-            {
-                Id = task.Id,
-                ProjectId = task.ProjectId,
-                PerformerId = task.Performer.Id,
-                Name = task.Name,
-                Description = task.Description,
-                CreatedAt = task.CreatedAt,
-                FinishedAt = task.FinishedAt,
-                State = task.State,
-            };
-        }
-
-        public Team BindTeam(TeamEntity team)
-        {
-            return new Team()
-            {
-                CreatedAt = team.CreatedAt,
-                Id = team.Id,
-                Name = team.Name
-            };
-        }
-
-        public User BindUser(UserEntity user)
-        {
-            return new User()
-            {
-                Id = user.Id,
-                BirthDay = user.BirthDay,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                RegisteredAt = user.RegisteredAt,
-                TeamId = user.TeamId
-            };
-        }
         #endregion
 
         #region private

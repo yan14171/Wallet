@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Projects.API.Interfaces;
-using Projects.API.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Projects.Modelling.DTOs;
 using System.Threading.Tasks;
 
 namespace Projects.API.Controllers
@@ -78,7 +75,7 @@ namespace Projects.API.Controllers
         [Route("userInfo/{id}")]
         public async Task<IActionResult> GetUserInfo(int id)
         {
-            DTOs.UserInfo userInfo;
+            UserInfo userInfo;
 
             try
             {

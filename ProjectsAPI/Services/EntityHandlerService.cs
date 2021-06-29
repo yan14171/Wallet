@@ -5,9 +5,8 @@ using Projects.Modelling.Interfaces;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System;
-using Projects.Modelling.Services;
 using Projects.API.Interfaces;
+using Projects.Modelling.DTOs;
 
 namespace Projects.API.Services
 {
@@ -29,7 +28,7 @@ namespace Projects.API.Services
             var tasksModelsTask = (unitOfWork.Tasks as TaskRepository).GetAllAsync();
             var teamsModelsTask = (unitOfWork.Teams as TeamRepository).GetAllAsync();
 
-            await Task.WhenAll(projectModelsTask,
+            await System.Threading.Tasks.Task.WhenAll(projectModelsTask,
                                usersModelsTask,
                                tasksModelsTask,
                                teamsModelsTask);
@@ -48,7 +47,7 @@ namespace Projects.API.Services
             var tasksModelsTask = (unitOfWork.Tasks as TaskRepository).GetAllAsync();
             var projectsModelsTask = (unitOfWork.Projects as ProjectRepository).GetAllAsync();
 
-            await Task.WhenAll(
+            await System.Threading.Tasks.Task.WhenAll(
                                usersModelsTask,
                                teamsModelsTask,
                                tasksModelsTask,
@@ -69,7 +68,7 @@ namespace Projects.API.Services
             var usersModelsTask = (unitOfWork.Users as UserRepository).GetAllAsync();
             var tasksModelsTask = (unitOfWork.Tasks as TaskRepository).GetAllAsync();
 
-            await Task.WhenAll(
+            await System.Threading.Tasks.Task.WhenAll(
                                usersModelsTask,
                                tasksModelsTask
                                );
@@ -85,7 +84,7 @@ namespace Projects.API.Services
             var usersModelsTask = (unitOfWork.Users as UserRepository).GetAllAsync();
             var tasksModelsTask = (unitOfWork.Tasks as TaskRepository).GetAllAsync();
 
-            await Task.WhenAll(
+            await System.Threading.Tasks.Task.WhenAll(
                                usersModelsTask,
                                tasksModelsTask
                                );
@@ -119,7 +118,7 @@ namespace Projects.API.Services
             var usersModelsTask = (unitOfWork.Users as UserRepository).GetAllAsync();
             var teamsModelsTask = (unitOfWork.Teams as TeamRepository).GetAllAsync();
 
-            await Task.WhenAll(
+            await System.Threading.Tasks.Task.WhenAll(
                                usersModelsTask,
                                teamsModelsTask
                                );
@@ -135,7 +134,7 @@ namespace Projects.API.Services
             var usersModelsTask = (unitOfWork.Users as UserRepository).GetAllAsync();
             var teamsModelsTask = (unitOfWork.Teams as TeamRepository).GetAllAsync();
 
-            await Task.WhenAll(
+            await System.Threading.Tasks.Task.WhenAll(
                                usersModelsTask,
                                teamsModelsTask
                                );
@@ -145,82 +144,6 @@ namespace Projects.API.Services
                 teamsModelsTask.Result.Where(n => n.Id == id),
                 usersModelsTask.Result)
                 .FirstOrDefault();
-        }
-
-        public bool AddTask(TaskEntity task)
-        {
-            var taskModel = (binder as EntityBinderService).BindTask(task);
-
-            (unitOfWork.Tasks as TaskRepository).Add(taskModel);
-
-            return true;
-        }
-
-        public bool AddUser(UserEntity user)
-        {
-            var userModel = (binder as EntityBinderService).BindUser(user);
-
-            (unitOfWork.Users as UserRepository).Add(userModel);
-
-            return true;
-        }
-
-        public bool AddTeam(TeamEntity team)
-        {
-            var teamModel = (binder as EntityBinderService).BindTeam(team);
-
-            (unitOfWork.Teams as TeamRepository).Add(teamModel);
-
-            return true;
-        }
-
-        public bool AddProject(ProjectEntity project)
-        {
-            var projectModel = (binder as EntityBinderService).BindProject(project);
-
-            (unitOfWork.Projects as ProjectRepository).Add(projectModel);
-
-            return true;
-        }
-
-        public bool DeleteProjectById(int id)
-        {
-            if ((unitOfWork.Projects as ProjectRepository).Count() < id - 1)
-                return false;
-
-            (unitOfWork.Projects as ProjectRepository).DeleteAt(id);
-
-            return true;
-        }
-
-        public bool DeleteTaskById(int id)
-        {
-            if ((unitOfWork.Tasks as TaskRepository).Count() < id - 1)
-                return false;
-
-            (unitOfWork.Tasks as TaskRepository).DeleteAt(id);
-
-            return true;
-        }
-
-        public bool DeleteTeamById(int id)
-        {
-            if ((unitOfWork.Teams as TeamRepository).Count() < id - 1)
-                return false;
-
-            (unitOfWork.Teams as TeamRepository).DeleteAt(id);
-
-            return true;
-        }
-
-        public bool DeleteUserById(int id)
-        {
-            if ((unitOfWork.Users as UserRepository).Count() < id - 1)
-                return false;
-
-            (unitOfWork.Users as UserRepository).DeleteAt(id);
-
-            return true;
         }
     }
 }
