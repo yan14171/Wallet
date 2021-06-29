@@ -69,24 +69,6 @@ namespace Projects.QueriesUI
             }
         }
 
-        private int GetParameter()
-        {
-            Console.Clear();
-            Console.WriteLine("This method accepts additionl Id parameter :");
-
-            int param;
-            while (true)
-            {
-                try
-                {
-                    param = Convert.ToInt32(Console.ReadLine());
-
-                    break;
-                }
-                catch { }
-            }
-
-            return param;
-        }
+       
     }
 }

@@ -1,0 +1,65 @@
+[33mcommit f13ecd4399a3f70123f3dc68b1a17320718981dd[m[33m ([m[1;36mHEAD[m[33m)[m
+Author: yan14171 <aniki123beatme@gmail.com>
+Date:   Tue Jun 29 13:41:39 2021 +0300
+
+    Made additive and updative behaviours possible only with DTOs. Started working on UI
+
+[33mcommit ca2118baa03ad5c571254d61f0e39ffb857ff987[m
+Author: yan14171 <aniki123beatme@gmail.com>
+Date:   Tue Jun 29 11:21:16 2021 +0300
+
+    Added Config strings, deleted unneccesary startUp IoC code
+
+[33mcommit 0d6ac29ef8f36289587c838a5eb1172512f8b055[m
+Author: yan14171 <aniki123beatme@gmail.com>
+Date:   Tue Jun 29 10:45:24 2021 +0300
+
+    Added basic API functionality. responses contain Entitys and not DTOs
+
+[33mcommit 5ebc7b43841807712f59c2421c8c755dbd7ce4c8[m
+Author: yan14171 <aniki123beatme@gmail.com>
+Date:   Mon Jun 28 17:49:38 2021 +0300
+
+    Added delete, create and put behaviours to all entities
+
+[33mcommit 16ee0644b4c4a960460b7fb6fb4e86a906c31f3b[m
+Author: yan14171 <aniki123beatme@gmail.com>
+Date:   Mon Jun 28 16:15:03 2021 +0300
+
+    Created Get and GetALL methods for all entities
+
+[33mcommit 55010720e07d83d5499dc81f3d91f1eacf195a81[m
+Author: yan14171 <aniki123beatme@gmail.com>
+Date:   Mon Jun 28 12:13:11 2021 +0300
+
+    Implemented first method in ProjectsController
+
+[33mcommit 550f752465a40bc84b468b5a332900c3a8f3a966[m
+Author: yan14171 <aniki123beatme@gmail.com>
+Date:   Mon Jun 28 11:45:08 2021 +0300
+
+    Created EntityHandlerService with first method
+
+[33mcommit 5cc45eb325f08767c66fc797973f15487cf10c7a[m
+Author: yan14171 <aniki123beatme@gmail.com>
+Date:   Mon Jun 28 10:56:18 2021 +0300
+
+    Reworked the DataAccess interfaces.
+
+[33mcommit ec1e87f38a3729051ff2b6116916da05cdcdf673[m
+Author: yan14171 <aniki123beatme@gmail.com>
+Date:   Mon Jun 28 10:36:31 2021 +0300
+
+    Reworked the binding service
+
+[33mcommit 06cead4bac86fce7e9ff4d28714edadb08f2b269[m
+Author: yan14171 <aniki123beatme@gmail.com>
+Date:   Mon Jun 28 10:27:40 2021 +0300
+
+    Added Modelling namespace. About to reimplement the EntityBinder
+
+[33mcommit 4e467d3f4790c82571e9c0d177c31d04e3383e60[m
+Author: yan14171 <aniki123beatme@gmail.com>
+Date:   Tue Jun 22 20:04:46 2021 +0300
+
+    Initial commit
