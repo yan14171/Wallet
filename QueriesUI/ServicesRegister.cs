@@ -1,10 +1,8 @@
 ﻿using Autofac;
 using Projects.Modelling.Interfaces;
 using Projects.Modelling.Services;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
+using Projects.QueriesUI.Interfaces;
+using Projects.QueriesUI.Services;
 
 namespace Projects.QueriesUI
 {
@@ -14,8 +12,8 @@ namespace Projects.QueriesUI
         {
             ContainerBuilder builder = new ContainerBuilder();
 
-            builder.RegisterType<IEntityBinderService>()
-                .As<EntityBinderService>();
+            builder.RegisterType<EntityBinderService>()
+                .As<IEntityBinderService>();
 
             builder.RegisterType<ApplicationInterface>()
                 .As<IApplicationInterface>();

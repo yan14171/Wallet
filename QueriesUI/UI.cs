@@ -1,14 +1,23 @@
 ﻿using System;
 
-namespace QueriesUI
+namespace Projects.QueriesUI
 {
     internal class UI
     {
-        public UI()
+        private readonly int taskAmount;
+        private readonly string[] tasks;
+        private readonly string[] taskNames;
+
+        public UI(string[] tasks, string[] taskNames)
         {
+            if (tasks.Length != taskNames.Length) throw new Exception("taskNames length != tasks length");
+
+            this.taskAmount = taskNames.Length;
+            this.tasks = tasks;
+            this.taskNames = taskNames;
         }
 
-        internal (int Method, int Parameter) GetTaskNumber()
+        internal (string Method, int Parameter) GetTaskNumber()
         {
             int initialX = Console.CursorLeft;
             int initialY = Console.CursorTop;
@@ -18,7 +27,9 @@ namespace QueriesUI
 
             Console.SetCursorPosition(initialX, initialY);
 
-            return KeyLoop();
+            var taskRes = KeyLoop();
+
+            return (tasks[taskRes.Method-1],taskRes.Parameter);
         }
 
         private (int Method, int Parameter) KeyLoop()
@@ -31,11 +42,11 @@ namespace QueriesUI
             {
                 Console.SetCursorPosition(0, 0);
 
-                for (int i = 1; i < 8; i++)
+                for (int i = 0; i < taskAmount; i++)
                 {
                     if(Console.CursorTop == loopY)
                     Console.ForegroundColor = ConsoleColor.Blue;
-                    Console.WriteLine("Task " + i);
+                    Console.WriteLine("Task " + taskNames[i]);
 
                     Console.ForegroundColor = ConsoleColor.White;
                 }
@@ -43,7 +54,7 @@ namespace QueriesUI
                 switch (Console.ReadKey(intercept: true).Key)
                 {
                     case ConsoleKey.DownArrow:
-                        if (loopY < 6) loopY++;
+                        if (loopY < taskAmount-1) loopY++;
                         break;
                     case ConsoleKey.UpArrow:
                         if (loopY > 0) loopY--;
@@ -51,9 +62,6 @@ namespace QueriesUI
                     case ConsoleKey.Enter:
                         {
                             int param = 0;
-
-                            if (loopY== 0 || loopY == 1 || loopY == 2 || loopY == 5)
-                             param = GetParameter();
 
                             return (loopY + 1, param);
                         }

@@ -1,5 +1,6 @@
 ﻿using Autofac;
-using Projects.Modelling;
+using Projects.QueriesUI.Interfaces;
+using Projects.QueriesUI.Services;
 using System.Threading.Tasks;
 
 namespace Projects.QueriesUI
