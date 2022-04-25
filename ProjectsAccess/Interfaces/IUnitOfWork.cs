@@ -4,13 +4,11 @@ namespace Projects.DataAccess.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IProjectRepository Projects { get; }
+        IAccountRepository Accounts { get; }
 
-        ITaskRepository Tasks { get; }
+        IIncomeItemRepository IncomeItems { get; }
 
-        ITeamRepository Teams { get; }
-
-        IUserRepository Users { get; }
+        ITransactionRepository Transactions { get; }
 
         int Complete();
     }
