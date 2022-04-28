@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modelling", "Modelling\Mode
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogicLeve", "BusinessLogicLeve\BusinessLogicLeve.csproj", "{594D03E2-FED6-49C0-905F-BE0A4AFD234D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.Console", "UI.Console\UI.Console.csproj", "{58110570-28C1-43CB-B865-61708C8A3FF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI.Console", "UI.Console\UI.Console.csproj", "{58110570-28C1-43CB-B865-61708C8A3FF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{D2F12825-D23E-4E22-9843-7359EAD5908C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{58110570-28C1-43CB-B865-61708C8A3FF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58110570-28C1-43CB-B865-61708C8A3FF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58110570-28C1-43CB-B865-61708C8A3FF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2F12825-D23E-4E22-9843-7359EAD5908C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2F12825-D23E-4E22-9843-7359EAD5908C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2F12825-D23E-4E22-9843-7359EAD5908C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2F12825-D23E-4E22-9843-7359EAD5908C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

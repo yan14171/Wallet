@@ -12,135 +12,102 @@ namespace Projects.DataAccess.Repositories
 {
     public class DBRepository<T> : IRepository<T> where T : EntityBase, new()
     {
-        private List<T> _models;
-
         private DbContext _context;
 
         public DBRepository(DbContext context)
         {
             this._context = context;
-
-            _models = GetObjects(context).ToList();
         }
-
-
 
 #region public:
 
         public IEnumerable<T> GetAll()
         {
-            /*string connectionString = GetConnectionString<T>();
-
-            IEnumerable<T> objects = GetObjects(connectionString);
-
-            return objects;*/
-
-            return _models;
+            return GetObjects();
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            /* string connectionString = GetConnectionString<T>();
-
-             IEnumerable<T> objects = await GetObjectsAsync(connectionString);
-
-             return objects;*/
-
-            return _models;
+            return await GetObjectsAsync();
         }
 
         public T GetById(int id)
         {
-            if (id < 0) return new T();
+            if (id <= 0) throw new ArgumentOutOfRangeException("id", id, "Id must be greater than 0");
 
             var foundEntitities =
-                _models.Where(n => n.Id == id);
+                 GetObject(id);
 
-            if (foundEntitities.Count() > 1 || foundEntitities.Count() < 1)
-                return null;
-
-            return foundEntitities.First();
-
-           /* string connectionString = GetConnectionString<T>();
-
-            connectionString += $"/{id}";
-
-            T @object = GetObject(connectionString);
-
-            return @object;*/
+            return foundEntitities;
         }
 
         public async Task<T> GetByIdAsync(int id)
         {
-
-            if (id < 0) return new T();
+            if (id <= 0) throw new ArgumentOutOfRangeException("id", id, "Id must be greater than 0");
 
             var foundEntitities =
-                _models.Where(n => n.Id == id);
+                await GetObjectAsync(id);
 
-            if (foundEntitities.Count() > 1 || foundEntitities.Count() < 1)
-                return new T();
-
-            return foundEntitities.First();
-
-            /* if (id < 0) return new T();
-
-             string connectionString = GetConnectionString<T>();
-
-             connectionString += $"/{id}";
-
-             T @object = await GetObjectAsync(connectionString);
-
-             return @object;*/
+            return foundEntitities;
         }
 
         public void Add(T model)
         {
-            _models.Add(model);
+            _context.Set<T>().Add(model);
             _context.SaveChanges();
         }
 
-        public void AddAsync(T model)
+        public async Task AddAsync(T model)
         {
-            _models.Add(model);
-            _context.SaveChangesAsync();
+            _context.Set<T>().Add(model);
+            await _context.SaveChangesAsync();
         }
 
         public void DeleteAt(int id)
         {
-            _models.RemoveAll(n => n.Id == id);
+            try
+            {
+                var entity = GetById(id);
+                _context.Set<T>().Remove(entity);
+                _context.SaveChanges();
+            }
+            catch(Exception ex)
+            {
+                throw new InvalidOperationException("Failed to delete an object",ex);
+            }
+
         }
 
-        public int Count() => _models.Count();
+        public int Count() => _context.Set<T>().Count();
 
 #endregion
 
 #region private
 
-        private async Task<IEnumerable<T>> GetObjectsAsync(DbContext context)
+        private async Task<IEnumerable<T>> GetObjectsAsync()
         {
-            var objects = await context.Set<T>().AsNoTracking().ToListAsync();
+            var objects = await _context.Set<T>().AsNoTracking().ToListAsync();
 
             return objects;
         }
 
-        private IEnumerable<T> GetObjects(DbContext context)
+        private IEnumerable<T> GetObjects()
         {
-            var objects = context.Set<T>();
+            var objects = _context.Set<T>().AsQueryable();
 
             return objects;
         }
 
-        private async Task<T> GetObjectAsync(DbContext context, int id)
+        private async Task<T> GetObjectAsync(int id)
         {
-            var result = await context.Set<T>().AsNoTracking().SingleAsync(n => n.Id == id);
+            var result = await _context.Set<T>().SingleAsync(n => n.Id == id);
 
             return result;
         }
 
-        private T GetObject(DbContext context, int id)
+        private T GetObject(int id)
         {
-            var result = context.Set<T>().AsNoTracking().Single(n => n.Id == id);
+            var result = _context.Set<T>().Single(n => n.Id == id);
 
             return result;
         }

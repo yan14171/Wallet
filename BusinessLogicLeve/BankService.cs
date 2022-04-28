@@ -2,11 +2,7 @@
 using Projects.DataAccess.Interfaces;
 using Projects.DataAccess.Repositories;
 using Projects.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BusinessLogicLeve
 {
@@ -46,7 +42,6 @@ namespace BusinessLogicLeve
                 .AsQueryable()
                 .Where(n => n.IncomeItemId == incomeItemId);
         }
-
         public void Transaction(int accountId1, int accountId2, int sum)
         {
             var chosenAcc = GetAllWallets().First(n => n.Id == accountId1);

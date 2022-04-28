@@ -5,7 +5,7 @@ using Projects.Entities;
 
 var programLoop = true;
 List<Account> accounts;
-var _container = ContainerConfig.Configure();
+var _container = ContainerConfig.Configure().Build();
 
 while (programLoop)
 {

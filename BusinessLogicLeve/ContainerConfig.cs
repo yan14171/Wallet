@@ -8,9 +8,10 @@ namespace BusinessLogicLeve
 {
     public static class ContainerConfig
     {
-        public static IContainer Configure()
+        public static ContainerBuilder Configure(ContainerBuilder builder = null)
         {
-            var builder = new ContainerBuilder();
+            if(builder == null)
+            builder = new ContainerBuilder();
 
             builder.Register(c => new WalletDbContextFactory().CreateDbContext())
                 .As<WalletDbContext>()
@@ -36,7 +37,7 @@ namespace BusinessLogicLeve
                 .AsSelf()
                 .InstancePerLifetimeScope();
 
-            return builder.Build();
+            return builder;
         }
     }
 }
